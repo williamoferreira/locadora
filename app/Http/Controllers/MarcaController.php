@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Marca;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MarcaController extends Controller
 {
@@ -15,6 +16,8 @@ class MarcaController extends Controller
     public function index()
     {
         //
+        $marcas = Marca::all();
+        return $marcas;
     }
 
     /**
@@ -48,7 +51,13 @@ class MarcaController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+
+            $marca = Marca::findOrFail($id);
+            return $marca;
+        } catch (ModelNotFoundException $e) {
+            return response()->json('NOT FOUND', 404);
+        }
     }
 
     /**
