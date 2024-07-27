@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class MarcaController extends Controller
 {
+
+    public function __construct(Marca $marca) {
+        $this->marca = $marca;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -16,7 +20,7 @@ class MarcaController extends Controller
     public function index()
     {
         //
-        $marcas = Marca::all();
+        $marcas = $this->marca->all();
         return $marcas;
     }
 
@@ -39,7 +43,7 @@ class MarcaController extends Controller
     public function store(Request $request)
     {
         //
-        $marca = Marca::create($request->all());        
+        $marca = $this->marca->create($request->all());        
         return $marca;
     }
 
@@ -53,7 +57,7 @@ class MarcaController extends Controller
     {
         try {
 
-            $marca = Marca::findOrFail($id);
+            $marca = $this->marca->findOrFail($id);
             return $marca;
         } catch (ModelNotFoundException $e) {
             return response()->json('NOT FOUND', 404);
@@ -80,14 +84,17 @@ class MarcaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
         // print_r($request->all());
         // echo("<br>");
-        $marca = Marca::findOrFail($id);
+        $marca = $this->marca->findOrFail($id);
         // print_r($marca->getAttributes());
 
         $marca->update($request->all());
         return $marca;
+        } catch (ModelNotFoundException $e) {
+            return response()->json('NOT FOUND', 404);
+        }
     }
 
     /**
@@ -99,5 +106,12 @@ class MarcaController extends Controller
     public function destroy($id)
     {
         //
+        try {
+            $marca = $this->marca->findOrFail($id);
+            $marca->delete();
+            return ['msg' => "A marca foi removida com sucesso!"];
+        } catch (ModelNotFoundException $e) {
+            return response()->json('NOT FOUND', 404);
+        }
     }
 }
