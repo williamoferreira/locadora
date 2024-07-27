@@ -81,6 +81,13 @@ class MarcaController extends Controller
     public function update(Request $request, $id)
     {
         //
+        // print_r($request->all());
+        // echo("<br>");
+        $marca = Marca::findOrFail($id);
+        // print_r($marca->getAttributes());
+
+        $marca->update($request->all());
+        return $marca;
     }
 
     /**
