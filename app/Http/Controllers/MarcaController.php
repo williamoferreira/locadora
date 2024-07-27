@@ -60,7 +60,7 @@ class MarcaController extends Controller
             $marca = $this->marca->findOrFail($id);
             return $marca;
         } catch (ModelNotFoundException $e) {
-            return response()->json('NOT FOUND', 404);
+            return response()->json(['erro' => 'NOT FOUND'], 404);
         }
     }
 
@@ -93,7 +93,7 @@ class MarcaController extends Controller
         $marca->update($request->all());
         return $marca;
         } catch (ModelNotFoundException $e) {
-            return response()->json('NOT FOUND', 404);
+            return response()->json(['erro' => 'NOT FOUND'], 404);
         }
     }
 
@@ -111,7 +111,7 @@ class MarcaController extends Controller
             $marca->delete();
             return ['msg' => "A marca foi removida com sucesso!"];
         } catch (ModelNotFoundException $e) {
-            return response()->json('NOT FOUND', 404);
+            return response()->json(['error' => 'NOT FOUND'], 404);
         }
     }
 }
