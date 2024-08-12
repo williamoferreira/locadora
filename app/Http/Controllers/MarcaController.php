@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Marca;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
+
 
 class MarcaController extends Controller
 {
@@ -39,12 +41,31 @@ class MarcaController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     * @note Adicionar ao header do request o parametro
+     *      accept: application/json 
+     * para que o serivdor entenda que o cliente não 
+     * espera redirecis no processamento de erros
      */
     public function store(Request $request)
     {
-        //
-        $marca = $this->marca->create($request->all());        
-        return response()->json($marca, 201);
+        
+        try {
+            $regras = [
+                'nome' => 'required|unique:marcas',
+                'imagem' => 'required'
+            ];
+            $feedback = [
+                'required' => 'O campo :attribute é obrigatório',
+                'nome.unique' => 'O nome da marca já existe'
+            ];
+            $mensagem = $request->validate($regras, $feedback);
+            $marca = $this->marca->create($request->all());        
+            return response()->json($marca, 201);
+        } catch (ValidationException $e) {
+            return response()->json(
+                ['erro' => $mensagem], 422
+            );
+        }
     }
 
     /**
@@ -60,7 +81,7 @@ class MarcaController extends Controller
             $marca = $this->marca->findOrFail($id);
             return $response()->json($marca,200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['erro' => 'NOT FOUND'], 404);
+            return response()->json(['erro' => 'Recurso pesquisado não existe'], 404);
         }
     }
 
@@ -73,6 +94,7 @@ class MarcaController extends Controller
     public function edit($id)
     {
         //
+
     }
 
     /**
