@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Marca;
+use App\Log;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
+
 
 
 class MarcaController extends Controller
@@ -48,7 +50,7 @@ class MarcaController extends Controller
      */
     public function store(Request $request)
     {
-        
+        dd($request);
         try {
             $regras = [
                 'nome' => 'required|unique:marcas',
